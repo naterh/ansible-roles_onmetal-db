@@ -1,0 +1,35 @@
+---
+# tasks file for ansible-roles_onmetal-db-disk-config
+
+# per pquerna:
+# http://www.rackspace.com/knowledge_center/article/configure-flash-drives-in-high-io-instances-as-data-drives
+
+- group: name={{ mongodb_group }} state=present
+- user: name={{ mongodb_user }} comment="mongodb user" uid=1040 group={{ mongodb_group }}
+
+# get the devices
+
+# set the scheduler
+- command: echo {{ onmetal_disk_scheduler }} > /sys/block/sdb/queue/scheduler
+- command: echo {{ onmetal_disk_scheduler }} > /sys/block/sdc/queue/scheduler
+
+# set various fs params
+- command: echo 4096 > /sys/block/sdb/queue/nr_requests
+- command: echo 1024 > /sys/block/sdb/queue/max_sectors_kb
+- command: echo 1 > /sys/block/sdb/queue/nomerges
+- command: echo 512 > /sys/block/sdb/device/queue_depth
+
+- command: echo 4096 > /sys/block/sdc/queue/nr_requests
+- command: echo 1024 > /sys/block/sdc/queue/max_sectors_kb
+- command: echo 1 > /sys/block/sdc/queue/nomerges
+- command: echo 512 > /sys/block/sdc/device/queue_depth
+
+- command: mdadm --create --verbose /dev/md0 --level=stripe --raid-devices=2 /dev/sdb /dev/sdc
+- filesystem: fstype=ext4 dev=/dev/md0
+- name: Create the data directory
+  file: path=/data state=directory owner={{ mongodb_user }} group={{ mongodb_group }}
+- command: echo "UUID=`blkid -s UUID -o value /dev/md0`  /data ext4  noatime 0  0" >> /etc/fstab
+- mount: name=/data src=/dev/md0 fstype=ext4 state=present
+
+- command: blockdev --setra 16 /dev/md0
+- command: mount /data

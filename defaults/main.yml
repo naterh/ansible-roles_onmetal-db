@@ -1,0 +1,5 @@
+---
+# defaults file for ansible-roles_onmetal-db-disk-config
+
+mongodb_user: mongodb
+mongodb_group: mongodb

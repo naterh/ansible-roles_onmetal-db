@@ -1,0 +1,4 @@
+---
+# vars file for ansible-roles_onmetal-db-disk-config
+
+onmetal_disk_scheduler: noop
