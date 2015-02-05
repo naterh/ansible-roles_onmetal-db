@@ -1,7 +1,7 @@
-Role Name
-=========
+onMetal DB disk config
+======================
 
-A brief description of the role goes here.
+This role configures an onMetal I/O instance for usage as a DB server, includes all the best practice recommendations from Rackspace for getting the most out of the system in terms of performance.
 
 Requirements
 ------------
