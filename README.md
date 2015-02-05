@@ -15,6 +15,7 @@ Role Variables
 There are only a couple of variables that one may generally want to change.
 
 ```yaml
+# disk I/O Scheduler: valid values:  cfq | noop | deadline
 onmetal_disk_scheduler: noop
 
 # valid values: stripe | mirror (passed to md)
