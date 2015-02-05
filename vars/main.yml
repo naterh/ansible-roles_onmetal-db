@@ -2,3 +2,5 @@
 # vars file for ansible-roles_onmetal-db-disk-config
 
 onmetal_disk_scheduler: noop
+
+onmetal_disk_mirror_or_stripe: mirror

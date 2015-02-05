@@ -12,10 +12,14 @@ Requirements
 Role Variables
 --------------
 
-There is really only one variable that one may generally want to change:
+There are only a couple of variables that one may generally want to change.
 
 ```yaml
 onmetal_disk_scheduler: noop
+
+# valid values: stripe | mirror (passed to md)
+onmetal_disk_mirror_or_stripe: mirror
+
 ```
 
 Example Playbook

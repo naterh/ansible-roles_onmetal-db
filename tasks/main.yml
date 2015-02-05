@@ -24,7 +24,7 @@
 - command: echo 1 > /sys/block/sdc/queue/nomerges
 - command: echo 512 > /sys/block/sdc/device/queue_depth
 
-- command: mdadm --create --verbose /dev/md0 --level=stripe --raid-devices=2 /dev/sdb /dev/sdc
+- command: mdadm --create --verbose /dev/md0 --level={{onmetal_disk_mirror_or_stripe}} --raid-devices=2 /dev/sdb /dev/sdc
 - filesystem: fstype=ext4 dev=/dev/md0
 - name: Create the data directory
   file: path=/data state=directory owner={{ mongodb_user }} group={{ mongodb_group }}
