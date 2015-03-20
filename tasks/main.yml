@@ -4,10 +4,7 @@
 # per pquerna:
 # http://www.rackspace.com/knowledge_center/article/configure-flash-drives-in-high-io-instances-as-data-drives
 
-- group: name={{ mongodb_group }} state=present
-- user: name={{ mongodb_user }} comment="mongodb user" uid=1040 group={{ mongodb_group }}
-
-# get the devices
+- yum: name=mdadm state=latest
 
 # set the scheduler
 - command: echo {{ onmetal_disk_scheduler }} > /sys/block/sdb/queue/scheduler
@@ -24,7 +21,7 @@
 - command: echo 1 > /sys/block/sdc/queue/nomerges
 - command: echo 512 > /sys/block/sdc/device/queue_depth
 
-- command: mdadm --create --verbose /dev/md0 --level={{onmetal_disk_mirror_or_stripe}} --raid-devices=2 /dev/sdb /dev/sdc
+- command: mdadm --create --force --verbose /dev/md0 --level={{onmetal_disk_mirror_or_stripe}} --raid-devices=2 /dev/sdb /dev/sdc
 - filesystem: fstype=ext4 dev=/dev/md0
 - name: Create the data directory
   file: path=/data state=directory owner={{ mongodb_user }} group={{ mongodb_group }}
