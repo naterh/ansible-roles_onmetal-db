@@ -3,4 +3,4 @@
 
 onmetal_disk_scheduler: noop
 
-onmetal_disk_mirror_or_stripe: mirror
+onmetal_disk_mirror_or_stripe: stripe

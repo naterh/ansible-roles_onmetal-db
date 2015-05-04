@@ -1,2 +1,6 @@
 ---
 # defaults file for ansible-roles_onmetal-db-disk-config
+
+onmetal_db_user: root
+
+onmetal_db_group: root
