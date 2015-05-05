@@ -10,6 +10,12 @@
 - command: echo {{ onmetal_disk_scheduler }} > /sys/block/sdb/queue/scheduler
 - command: echo {{ onmetal_disk_scheduler }} > /sys/block/sdc/queue/scheduler
 
+# setup user accounts
+- group: name={{ onmetal_db_group }} state=present
+- user: name={{ onmetal_db_user }} shell=/bin/bash groups={{ onmetal_db_group }} append=yes
+- name: Create the data directory
+  file: path=/data state=directory owner={{ onmetal_db_user }} group={{ onmetal_db_group }}
+
 # set various fs params
 - command: echo 4096 > /sys/block/sdb/queue/nr_requests
 - command: echo 1024 > /sys/block/sdb/queue/max_sectors_kb
@@ -23,10 +29,7 @@
 
 - command: mdadm --create --force --verbose /dev/md0 --level={{onmetal_disk_mirror_or_stripe}} --raid-devices=2 /dev/sdb /dev/sdc
 - filesystem: fstype=ext4 dev=/dev/md0
-- name: Create the data directory
-  file: path=/data state=directory owner={{ onmetal_db_user }} group={{ onmetal_db_group }}
 - command: echo "UUID=`blkid -s UUID -o value /dev/md0`  /data ext4  noatime 0  0" >> /etc/fstab
 - mount: name=/data src=/dev/md0 fstype=ext4 state=present
-
 - command: blockdev --setra 16 /dev/md0
 - command: mount /data
